@@ -1,0 +1,23 @@
+# dependencies
+../node_modules
+
+# yarn
+frontend/.yarn/*
+!frontend/.yarn/patches
+!frontend/.yarn/plugins
+!frontend/.yarn/releases
+!frontend/.yarn/sdks
+!frontend/.yarn/versions
+
+# eslint
+.eslintcache
+
+# misc
+.DS_Store
+
+# IDE
+.vscode
+.idea
+
+# cli
+dist
