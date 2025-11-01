@@ -1,0 +1,45 @@
+import { HardhatRuntimeEnvironment } from "hardhat/types";
+import { DeployFunction } from "hardhat-deploy/types";
+
+/**
+ * Deploys a contract named "ERC20Test" using the deployer account and
+ * constructor arguments set to the initial supply
+ *
+ * @param hre HardhatRuntimeEnvironment object.
+ */
+const deployERC20Test: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
+  /*
+    On localhost, the deployer account is the one that comes with Hardhat, which is already funded.
+
+    When deploying to live networks (e.g `yarn deploy --network sepolia`), the deployer account
+    should have sufficient balance to pay for the gas fees for contract creation.
+
+    You can generate a random account with `yarn generate` or `yarn account:import` to import your
+    existing PK which will fill DEPLOYER_PRIVATE_KEY_ENCRYPTED in the .env file (then used on hardhat.config.ts)
+    You can run the `yarn account` command to check your balance in every network.
+  */
+  const { deployer } = await hre.getNamedAccounts();
+  const { deploy } = hre.deployments;
+
+  // 使用 BigInt 表示 1,000,000 个代币（带18位小数）
+  const initialSupply = BigInt(1000000) * BigInt(10**18);
+
+  const deploymentResult = await deploy("ERC20Test", {
+    from: deployer,
+    // Contract constructor arguments
+    args: [initialSupply],
+    log: true,
+    // autoMine: can be passed to the deploy function to make the deployment process faster on local networks by
+    // automatically mining the contract deployment transaction. There is no effect on live networks.
+    autoMine: true,
+  });
+
+  console.log("✅ ERC20Test deployed successfully!");
+  console.log("📍 Contract Address:", deploymentResult.address);
+};
+
+export default deployERC20Test;
+
+// Tags are useful if you have multiple deploy files and only want to run one of them.
+// e.g. yarn deploy --tags ERC20LXH202330550761
+deployERC20Test.tags = ["ERC20LXH202330550761"];
