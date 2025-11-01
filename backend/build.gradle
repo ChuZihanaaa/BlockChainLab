@@ -1,0 +1,52 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.2.3'
+    id 'io.spring.dependency-management' version '1.1.4'
+    id "org.web3j" version "4.14.0"
+}
+
+group = 'com.wetech.demo.web3j'
+version = '1.0-SNAPSHOT'
+sourceCompatibility = '21'
+targetCompatibility = '21'
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Spring Boot
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+    // Web3j
+    implementation 'org.web3j:core:4.14.0'
+
+    // Lombok
+    compileOnly 'org.projectlombok:lombok:1.18.30'
+    annotationProcessor 'org.projectlombok:lombok:1.18.30'
+
+}
+
+web3j {
+    generatedPackageName = 'com.wetech.demo.web3j.contracts.{0}'
+    generatedFilesBaseDir = 'src'
+}
+
+sourceSets {
+    main {
+        solidity {
+            srcDir "src/main/resources/contracts"
+        }
+    }
+}
+
+test {
+    useJUnitPlatform()
+}
+
+// Check if the task exists before setting dependencies
+tasks.whenTaskAdded { task ->
+    if (task.name == 'generateContractWrappers') {
+        task.dependsOn(tasks.named('processResources'))
+    }
+}
